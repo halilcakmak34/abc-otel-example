@@ -1,13 +1,13 @@
-server.port: 8888
+server:
+  port: 8888
+
 spring:
+  profiles:
+    active: local
+  application:
+    name: config-server
   cloud:
     config:
       server:
-        git:
-          uri: https://github.com/halilcakmak34/abc-otel-config
-          default-label: main
         native:
-          searchLocations: file:///${GIT_REPO}
-
-
-
+          search-locations: classpath:/shared

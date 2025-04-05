@@ -9,4 +9,12 @@ spring:
         native:
           searchLocations: file:///${GIT_REPO}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
+
+logging.level.org.springframework.cloud: trace
+
 

@@ -4,17 +4,10 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/halilcakmak34/abc-otel-config
+          uri: https://github.com/halilcakmak34/abc-otel-config/config-service/src/main/resources/shared
           default-label: main
         native:
           searchLocations: file:///${GIT_REPO}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: *
-
-logging.level.org.springframework.cloud: trace
 
 

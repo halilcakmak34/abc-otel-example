@@ -3,11 +3,11 @@ server:
 
 spring:
   profiles:
-    active: local
+    active: native
   application:
     name: config-server
   cloud:
     config:
       server:
         native:
-          search-locations: classpath:/shared
+          search-locations: classpath:/configurations

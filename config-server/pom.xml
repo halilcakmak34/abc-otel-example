@@ -11,7 +11,7 @@
 	<groupId>com.oteller.example.service.config</groupId>
 	<artifactId>config-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>config</name>
+	<name>config-server</name>
 	<description>Config project for Spring Boot</description>
 	<url/>
 	<licenses>

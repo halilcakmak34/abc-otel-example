@@ -1,0 +1,238 @@
+version: "3.4"
+
+services:
+
+  postgres:
+    container_name: abc_postgres_container
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+      POSTGRES_DB: otel-db
+      PGHOST: abc-postgres-host
+    volumes:
+      - abc-postgresql-db-volume:/data/postgres
+    ports:
+      - "4900:5432"
+    networks:
+      - abc-app-network
+    restart: unless-stopped
+
+  config-server:
+    build:
+      context: ../config-server
+      args:
+        JAR_FILE: ../config-server/target/config-server-0.0.1-SNAPSHOT.jar
+      dockerfile: ../config-server/Dockerfile
+    image: config-server
+    container_name: config-server
+    hostname: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres
+
+  discovery-server:
+    build:
+      context: ../discovery-server
+      args:
+        JAR_FILE: ../discovery-server/target/discovery-server-0.0.1-SNAPSHOT.jar
+      dockerfile: ../discovery-server/Dockerfile
+    image: discovery-server
+    container_name: discovery-server
+    hostname: discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - config-server
+
+  gateway-service:
+    build:
+      context: ../gateway-service
+      args:
+        JAR_FILE: ../gateway-service/target/gateway-service-0.0.1-SNAPSHOT.jar
+      dockerfile: ../gateway-service/Dockerfile
+    image: gateway-service
+    container_name: gateway-service
+    hostname: gateway-service
+    ports:
+      - "8765:8765"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - discovery-server
+
+  notification-service:
+    build:
+      context: ../notification-service
+      args:
+        JAR_FILE: ../notification-service/target/notification-service-0.0.1-SNAPSHOT.jar
+      dockerfile: ../notification-service/Dockerfile
+    image: notification-service
+    container_name: notification-service
+    hostname: notification-service
+    ports:
+      - "4001:4001"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - discovery-server
+
+  otel-service:
+    build:
+      context: ../otel-service
+      args:
+        JAR_FILE: ../otel-service/target/otel-service-0.0.1-SNAPSHOT.jar
+      dockerfile: ../otel-service/Dockerfile
+    image: otel-service
+    container_name: otel-service
+    hostname: otel-service
+    ports:
+      - "4002:4002"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - discovery-server
+
+  reservation-service:
+    build:
+      context: ../reservation-service
+      args:
+        JAR_FILE: ../reservation-service/target/reservation-service-0.0.1-SNAPSHOT.jar
+      dockerfile: ../reservation-service/Dockerfile
+    image: reservation-service
+    container_name: reservation-service
+    hostname: reservation-service
+    ports:
+      - "4003:4003"
+    networks:
+      - abc-app-network
+    environment:
+      - ZIPKIN_HOST=abc-zipkin:9411
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - discovery-server
+
+  # Tracing service
+  abc-zipkin:
+    image: openzipkin/zipkin
+    container_name: otel-zipkin
+    hostname: otel-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - abc-app-network
+
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    networks:
+      - abc-app-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2182:2182"
+    networks:
+      - abc-app-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2183:2183"
+    networks:
+      - abc-app-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2183
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zoozookeeper-2:2888:3888;zookeeper-3:2888:3888
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - abc-app-network
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2182,zookeeper-3:2183"
+      KAFKA_BROKER_ID: 1
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9093:9093"
+      - "29093:29093"
+    networks:
+      - abc-app-network
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:19093,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093,DOCKER://host.docker.internal:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2182,zookeeper-3:2183"
+      KAFKA_BROKER_ID: 2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9094:9094"
+      - "29094:29094"
+    networks:
+      - abc-app-network
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:19094,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9094,DOCKER://host.docker.internal:29094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2182,zookeeper-3:2183"
+      KAFKA_BROKER_ID: 3
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+volumes:
+  abc-postgresql-db-volume:
+
+networks:
+  abc-app-network:
+    driver: bridge

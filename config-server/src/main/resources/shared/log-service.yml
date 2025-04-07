@@ -1,11 +1,12 @@
 
+
 spring:
   application:
-    name: notification-service
+    name: log-service
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
 
---- #DOCKER
+---
 spring:
   config:
     activate:
@@ -28,12 +29,11 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
   zipkin:
     base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
     enabled: true
     service:
-      name: notification-service
+      name: reservation-service
     message-timeout: 10
     sleuth:
       sampler:
@@ -42,7 +42,6 @@ spring:
       multipart:
         max-file-size: 10MB
         max-request-size: 10MB
-
   kafka:
     bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
     consumer:
@@ -50,6 +49,9 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topics:
       test:
         name: test-topic
@@ -74,7 +76,7 @@ application:
         expiration: 1296000000 # 15 days in ms
         cookie-name: refresh-jwt-cookie
 server:
-  port: ${SERVER_PORT:5001}
+  port: ${SERVER_PORT:5004}
 
 eureka:
   client:

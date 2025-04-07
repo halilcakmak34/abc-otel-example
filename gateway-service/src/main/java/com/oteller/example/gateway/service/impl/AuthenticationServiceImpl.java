@@ -1,5 +1,6 @@
 package com.oteller.example.gateway.service.impl;
 
+import com.oteller.example.gateway.exception.NotAvailableDataException;
 import com.oteller.example.gateway.payload.request.AuthenticationRequest;
 import com.oteller.example.gateway.payload.response.AuthenticationResponse;
 import com.oteller.example.gateway.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.oteller.example.gateway.entities.User;
 
+import java.util.Optional;
 
 
 @Service @Transactional
@@ -30,6 +32,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RefreshTokenService refreshTokenService;
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
+
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+
+        if(existingUser.isPresent()){
+            throw new NotAvailableDataException("User already exists");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -37,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
+
         user = userRepository.save(user);
         var jwt = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user.getId());

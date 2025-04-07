@@ -12,7 +12,7 @@ spring:
       on-profile: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:6900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -30,7 +30,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   zipkin:
-    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
       name: notification-service
@@ -74,13 +74,4 @@ application:
         expiration: 1296000000 # 15 days in ms
         cookie-name: refresh-jwt-cookie
 server:
-  port: ${SERVER_PORT:5001}
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
-    registerWithEureka: true
-    enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false
+  port: ${SERVER_PORT:4001}

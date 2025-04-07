@@ -1,19 +1,35 @@
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_FULL_URL:http://localhost:8761/eureka/}
-    registerWithEureka: true
-    enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false
 
 spring:
   application:
     name: reservation-service
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6900/otel-db}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      connection-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   zipkin:
-    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
     enabled: true
     service:
       name: reservation-service
@@ -43,30 +59,6 @@ spring:
         name: abc-logger-topic
         partitions: 1
         replication-factor: 1
-
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:postgres}
-    hikari:
-      connection-timeout: 600000
-      max-lifetime: 1800000
-      maximum-pool-size: 15
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 application:
   security:
     jwt:
@@ -77,39 +69,13 @@ application:
         expiration: 1296000000 # 15 days in ms
         cookie-name: refresh-jwt-cookie
 server:
-  port: ${SERVER_PORT:4003}
+  port: ${SERVER_PORT:5003}
 
----
-spring:
-  config:
-    activate:
-      on-profile: docker
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:postgres}
-    hikari:
-      connection-timeout: 600000
-      max-lifetime: 1800000
-      maximum-pool-size: 15
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-application:
-  security:
-    jwt:
-      secret-key: urfaguzelsehiristanbulda
-      expiration: 900000 #  15 min in ms
-      cookie-name: jwt-cookie
-      refresh-token:
-        expiration: 1296000000 # 15 days in ms
-        cookie-name: refresh-jwt-cookie
-server:
-  port: ${SERVER_PORT:4003}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+    registerWithEureka: true
+    enabled: true #eureka discovery is enabled in this profile
+  instance:
+    prefer-ip-address: false

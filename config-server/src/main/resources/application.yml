@@ -9,5 +9,5 @@ spring:
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/shared
+        git:
+          uri: file:///Users/admin-halil/Documents/dev-otel-example/abc-otel-example/config-server/src/main/resources/shared

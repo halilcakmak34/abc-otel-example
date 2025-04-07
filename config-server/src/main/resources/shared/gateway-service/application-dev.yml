@@ -1,0 +1,109 @@
+
+spring:
+  application:
+    name: gateway-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:6900/otel-db}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  zipkin:
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
+    enabled: true
+    service:
+      name: gateway-service
+    message-timeout: 10
+    sleuth:
+      sampler:
+        probability: 1.0
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+  kafka:
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    topics:
+      test:
+        name: test-topic
+        partitions: 1
+        replication-factor: 1
+      reservation:
+        name: reservation-topic
+        partitions: 1
+        replication-factor: 1
+      abc-logger:
+        name: abc-logger-topic
+        partitions: 1
+        replication-factor: 1
+
+  zuul:
+    sensitiveHeaders:
+    host:
+      socket-timeout-millis: 30000
+      connect-timeout-millis: 30000
+    prefix: /api
+    routes:
+      notification-service:
+        path: /notification-service/**
+        serviceId: notification-service
+      otel-service:
+        path: /otel-service/**
+        serviceId: otel-service
+      reservation-service:
+        path: /reservation-service/**
+        serviceId: reservation-service
+    ribbon:
+      eager-load:
+        enabled: true
+    ribbon-isolation-strategy: THREAD
+
+  ribbon:
+    ConnectTimeout: 10000
+    ReadTimeout: 60000
+    eureka:
+      enabled: false
+
+    hystrix:
+      command:
+        default:
+          execution:
+            isolation:
+              thread:
+                timeoutInMilliseconds: 70000
+application:
+  security:
+    jwt:
+      secret-key: urfaguzelsehiristanbulda
+      expiration: 900000 #  15 min in ms
+      cookie-name: jwt-cookie
+      refresh-token:
+        expiration: 1296000000 # 15 days in ms
+        cookie-name: refresh-jwt-cookie
+server:
+  port: ${SERVER_PORT:8765}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+    registerWithEureka: true
+    enabled: true #eureka discovery is enabled in this profile
+  instance:
+    prefer-ip-address: false

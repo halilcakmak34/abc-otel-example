@@ -16,7 +16,7 @@ spring:
     base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
-      name: abc-gateway-server
+      name: gateway-service
     message-timeout: 10
     sleuth:
       sampler:

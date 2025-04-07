@@ -14,11 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class OperationService {
+
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
 
@@ -26,6 +28,24 @@ public class OperationService {
         this.roomRepository = roomRepository;
         this.hotelRepository = hotelRepository;
     }
+
+    public boolean reservationRoom(Long hotelId,String roomNumber){
+        roomRepository.findByHotelEntity_idAndRoomNumber(hotelId,roomNumber).ifPresent(roomEntity -> {
+            roomEntity.setAvailable(false);
+            roomRepository.save(roomEntity);
+        });
+        return true;
+    }
+
+
+    public boolean cancelReservationRoom(Long hotelId,String roomNumber){
+        roomRepository.findByHotelEntity_idAndRoomNumber(hotelId,roomNumber).ifPresent(roomEntity -> {
+            roomEntity.setAvailable(true);
+            roomRepository.save(roomEntity);
+        });
+        return true;
+    }
+
 
     public boolean createHotel(HotelDto hotelDto){
         HotelEntity hotelEntity = HotelMapper.INSTANCE.mapToEntity(hotelDto);
@@ -74,4 +94,23 @@ public class OperationService {
         return true;
     }
 
+    public List<HotelDto> getHotelList(){
+        List<HotelEntity> hotelEntityList = hotelRepository.findAll();
+        return HotelMapper.INSTANCE.mapToDtos(hotelEntityList);
+    }
+
+    public List<RoomDto> getRoomList(){
+        List<RoomEntity> roomEntityList = roomRepository.findAll();
+        return RoomMapper.INSTANCE.mapToDtos(roomEntityList);
+    }
+
+    public List<RoomDto> availableCheck(Integer personCount) {
+        List<RoomEntity> roomEntityList = roomRepository.findByCapacityGreaterThanEqualAndAvailableIsTrue(personCount);
+        return RoomMapper.INSTANCE.mapToDtos(roomEntityList);
+    }
+
+    public boolean isAvailableRoom(Long hotelId, String roomNumber, Integer personCount) {
+        Optional<RoomEntity> roomEntityOptional = roomRepository.findByRoomNumberAndCapacityGreaterThanEqualAndAvailableIsTrueAndHotelEntity_id(roomNumber,personCount,hotelId);
+        return roomEntityOptional.isPresent();
+    }
 }

@@ -1,6 +1,6 @@
 package com.oteller.example.otel.payload.dto;
 
-import com.oteller.example.otel.model.enm.RoomType;
+import com.oteller.example.otel.payload.enm.RoomType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

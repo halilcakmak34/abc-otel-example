@@ -16,4 +16,9 @@ public class EndPointConstant {
     public static final String DELETE = "/delete";
     public static final String GET = "/get";
 
+    public static final String GET_OTEL_INFORMATION = "/get-otel-information";
+    public static final String IS_AVAILABLE_ROOM = "/is-available-room";
+    public static final String GET_AVAILABLE_ROOM_LIST = "/get-available-room-list";
+    public static final String RESERVATION_ROOM = "/reservation-room";
+    public static final String CANCEL_RESERVATION_ROOM = "/cancel-reservation-room";
 }

@@ -1,13 +1,11 @@
-package com.oteller.example.otel.model.dto;
+package com.oteller.example.otel.payload.dto;
 
-import com.oteller.example.otel.model.enm.MsgType;
+import com.oteller.example.otel.payload.enm.MsgType;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class Msg {
     private String msg;
     private String detail;

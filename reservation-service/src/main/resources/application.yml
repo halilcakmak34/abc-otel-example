@@ -12,6 +12,38 @@ spring:
     name: reservation-service
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+  zipkin:
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
+    enabled: true
+    service:
+      name: reservation-service
+    message-timeout: 10
+    sleuth:
+      sampler:
+        probability: 1.0
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+  kafka:
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    topics:
+      test:
+        name: test-topic
+        partitions: 1
+        replication-factor: 1
+      reservation:
+        name: reservation-topic
+        partitions: 1
+        replication-factor: 1
+      abc-logger:
+        name: abc-logger-topic
+        partitions: 1
+        replication-factor: 1
+
 ---
 spring:
   config:
@@ -22,6 +54,10 @@ spring:
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      connection-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
   jpa:
     hibernate:
       ddl-auto: create
@@ -53,6 +89,10 @@ spring:
     url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      connection-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
   jpa:
     hibernate:
       ddl-auto: create

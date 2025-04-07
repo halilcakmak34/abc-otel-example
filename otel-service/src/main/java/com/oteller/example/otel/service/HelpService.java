@@ -1,9 +1,9 @@
 package com.oteller.example.otel.service;
 
 import com.oteller.example.otel.payload.response.BaseResponse;
-import com.oteller.example.otel.model.dto.Msg;
-import com.oteller.example.otel.model.enm.StatusType;
-import com.oteller.example.otel.model.enm.MsgType;
+import com.oteller.example.otel.payload.dto.Msg;
+import com.oteller.example.otel.payload.enm.StatusType;
+import com.oteller.example.otel.payload.enm.MsgType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

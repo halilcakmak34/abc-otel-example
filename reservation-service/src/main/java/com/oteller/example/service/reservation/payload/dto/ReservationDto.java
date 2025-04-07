@@ -14,4 +14,6 @@ public class ReservationDto implements Serializable {
     private Long roomId;
     @NotNull(message = "Guest ID cannot be null")
     private String guestName;
+    @NotNull(message = "Person Count cannot be null")
+    private Integer personCount;
 }

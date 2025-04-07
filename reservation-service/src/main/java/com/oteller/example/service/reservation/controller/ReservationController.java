@@ -1,6 +1,7 @@
 package com.oteller.example.service.reservation.controller;
 
 import com.oteller.example.service.reservation.constant.EndPointConstant;
+import com.oteller.example.service.reservation.exception.NotAvailableRoomException;
 import com.oteller.example.service.reservation.payload.request.ReservationRequest;
 import com.oteller.example.service.reservation.payload.response.ReservationResponse;
 import com.oteller.example.service.reservation.service.ReservationService;
@@ -18,9 +19,9 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping(value = EndPointConstant.ACTION_RESERVATION, produces={MediaType.APPLICATION_JSON_VALUE})
-    public @ResponseBody ResponseEntity<ReservationResponse> actionReservation(@RequestBody ReservationRequest request){
+    public @ResponseBody ResponseEntity<ReservationResponse> actionReservation(@RequestBody ReservationRequest request) throws NotAvailableRoomException, Exception {
         ReservationResponse response = new ReservationResponse();
-        reservationService.actionReservation(request.getReservationDto());
+        reservationService.actionReservation(request.getReservationDto(),request.getOperation());
         return ResponseEntity.ok(response);
     }
 

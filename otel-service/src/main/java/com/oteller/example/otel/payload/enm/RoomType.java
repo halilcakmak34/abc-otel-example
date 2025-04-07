@@ -1,4 +1,4 @@
-package com.oteller.example.otel.model.enm;
+package com.oteller.example.otel.payload.enm;
 
 public enum RoomType {
     STANDART,MODERN,SUIT;

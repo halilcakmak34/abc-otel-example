@@ -12,4 +12,4 @@ spring:
         #git:
           #uri: file:///Users/admin-halil/Documents/dev-otel-example/abc-otel-example/config-server/src/main/resources/shared
         native:
-          search-locations: classpath:/shared
+          search-locations: classpath:/shared/

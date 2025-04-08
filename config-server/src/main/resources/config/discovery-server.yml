@@ -5,7 +5,6 @@ server:
 eureka:
   instance:
     hostname: localhost
-    nonSecurePort: ${server.port}
   client:
     registerWithEureka: false
     fetchRegistry: false

@@ -32,19 +32,6 @@ import org.springframework.context.annotation.Configuration;
                         description = "Development",
                         url = "http://localhost:5765"
 
-                ),
-                @Server(
-                        description = "notification-service",
-                        url = "http://localhost:5001"
-                ),
-                @Server(
-                        description = "otel-service",
-                        url = "http://localhost:5002"
-                )
-                ,
-                @Server(
-                        description = "reservation-service",
-                        url = "http://localhost:5003"
                 )
         },
         security = {

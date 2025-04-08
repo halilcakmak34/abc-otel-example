@@ -68,26 +68,14 @@ spring:
           uri: http://localhost:5002
           predicates:
             - Path=/api/otel-service/**
-          filters:
-            - RewritePath=/api/otel-service/(?<path>.*), /$\{path}
         - id: notification-service
           uri: http://localhost:5001
           predicates:
             - Path=/api/notification-service/**
-          filters:
-            - RewritePath=/api/notification-service/(?<path>.*), /$\{path}
         - id: reservation-service
           uri: http://localhost:5003
           predicates:
             - Path=/api/reservation-service/**
-          filters:
-            - RewritePath=/api/reservation-service/(?<path>.*), /$\{path}
-        - id: openapi
-          uri: http://localhost:${server.port}
-          predicates:
-            - Path=/v3/api-docs/**
-          filters:
-            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
 springdoc:
   cache:
     disabled: true

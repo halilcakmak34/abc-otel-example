@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(
-                                        "/**",
+                                        "/api/**",
                                         "/v2/api-docs",
                                         "/v3/api-docs",
                                         "/v3/api-docs/**",
@@ -89,5 +89,6 @@ public class SecurityConfiguration {
         bean.setOrder(CORS_FILTER_ORDER);
         return bean;
     }
+
 
 }

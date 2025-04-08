@@ -76,6 +76,15 @@ application:
 server:
   port: ${SERVER_PORT:5004}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+
 eureka:
   client:
     serviceUrl:

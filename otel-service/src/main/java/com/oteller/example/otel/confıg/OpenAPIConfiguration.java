@@ -1,6 +1,5 @@
-package com.oteller.example.gateway.config;
+package com.oteller.example.otel.confıg;
 
-import com.oteller.example.gateway.handlers.ErrorResponse;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.oteller.example.otel.handlers.ErrorResponse;
 
 @Configuration
 @OpenAPIDefinition(
@@ -34,17 +34,8 @@ import org.springframework.context.annotation.Configuration;
 
                 ),
                 @Server(
-                        description = "notification-service",
-                        url = "http://localhost:5001"
-                ),
-                @Server(
                         description = "otel-service",
                         url = "http://localhost:5002"
-                )
-                ,
-                @Server(
-                        description = "reservation-service",
-                        url = "http://localhost:5003"
                 )
         },
         security = {

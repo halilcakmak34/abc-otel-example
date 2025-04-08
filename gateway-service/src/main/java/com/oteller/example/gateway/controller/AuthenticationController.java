@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Authentication", description = "")
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 @SecurityRequirements()
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -51,7 +51,7 @@ public class AuthenticationController {
                 .body(authenticationResponse);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     @Operation(
             responses = {
                     @ApiResponse(

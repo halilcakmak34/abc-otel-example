@@ -127,6 +127,11 @@ public class OperationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value="/test", produces={MediaType.APPLICATION_JSON_VALUE})
+    public String getTest(){
+        return "test";
+    }
+
 
 
 }

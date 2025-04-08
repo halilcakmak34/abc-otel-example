@@ -6,14 +6,6 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:local}
 
 --- #LOCAL
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
-    registerWithEureka: true
-    enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false
 
 spring:
   config:
@@ -84,3 +76,21 @@ application:
         cookie-name: refresh-jwt-cookie
 server:
   port: ${SERVER_PORT:5001}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+    registerWithEureka: true
+    enabled: true #eureka discovery is enabled in this profile
+  instance:
+    prefer-ip-address: false

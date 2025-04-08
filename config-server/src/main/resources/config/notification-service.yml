@@ -14,7 +14,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -31,7 +31,7 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   zipkin:
-    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
       name: notification-service
@@ -44,7 +44,7 @@ spring:
         max-file-size: 10MB
         max-request-size: 10MB
   kafka:
-    bootstrap-servers: ${KAFKA_FULL_URL:localhost:5092}
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
     consumer:
       group-id: my-group
       auto-offset-reset: earliest
@@ -83,4 +83,8 @@ logging:
 
 server:
   port: 5001
-  forward-headers-strategy: framework
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

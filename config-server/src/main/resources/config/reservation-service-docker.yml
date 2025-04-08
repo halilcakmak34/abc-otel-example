@@ -79,9 +79,4 @@ logging:
 server:
   port: 5003
 
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-
 

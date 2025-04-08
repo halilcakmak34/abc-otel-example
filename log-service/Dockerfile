@@ -11,7 +11,7 @@ ENV EUREKA_FULL_URL http://${MY_IP}:8761/eureka/
 ENV POSTGRES_URL jdbc:postgresql://${MY_IP}:4900/otel-db
 
 # Copy the JAR file into the container
-COPY target/notification-service-0.0.1-SNAPSHOT.jar app.jar
+COPY target/log-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port that the application will run on
 EXPOSE 4001

@@ -7,8 +7,8 @@ spring:
       enabled: always
   security:
     user:
-      name: admin
-      password: admin
+      name: stack
+      password: overflow
   main:
     web-application-type: reactive
     allow-bean-definition-overriding: true
@@ -90,15 +90,20 @@ spring:
         - Path=/v3/api-docs/**
         filters:
         - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
-
 springdoc:
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
   swagger-ui:
-    use-root-path: true
-  api-docs:
-    version: openapi_3_1
+    urls:
+    - name: gateway-service
+      url: /v3/api-docs
+    - name: otel-service
+      url: /v3/api-docs/otel-service
+    - name: notification-service
+      url: /v3/api-docs/notification-service
+    - name: reservation-service
+      url: /v3/api-docs/reservation-service
+    - name: log-service
+      url: /v3/api-docs/log-service
+
 
 application:
   security:
@@ -125,12 +130,16 @@ logging:
 
 server:
   port: 5765
-  forward-headers-strategy: framework
 
 management:
   tracing:
     sampling:
       probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+
 
 
 

@@ -1,17 +1,9 @@
 
 spring:
-  application:
-    name: reservation-service
-  output:
-    ansi:
-      enabled: always
   security:
     user:
       name: stack
       password: overflow
-  main:
-    web-application-type: reactive
-    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
@@ -23,7 +15,7 @@ spring:
       maximum-pool-size: 15
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -45,6 +37,14 @@ spring:
         max-request-size: 10MB
   kafka:
     bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topics:
       test:
         name: test-topic
@@ -60,28 +60,23 @@ spring:
         replication-factor: 1
 
 springdoc:
-  packagesToScan: com.oteller.example.service.reservation
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
-  api-docs:
-    version: openapi_3_1
+  packagesToScan: com.oteller.example.log
+
+server:
+  port: ${SERVER_PORT:5004}
+
 
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
-
-logging:
-  pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
-
-server:
-  port: 5003
+    registerWithEureka: true
+    enabled: true #eureka discovery is enabled in this profile
 
 management:
   tracing:
     sampling:
       probability: 1.0
-
-
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans

@@ -10,7 +10,9 @@ spring:
         git:
           uri: https://github.com/halilcakmak34/abc-otel-config.git
           search-paths: 'application'
-
+  management:
+    security:
+      enabled: false
 
 logging:
   pattern:

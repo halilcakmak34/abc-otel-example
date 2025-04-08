@@ -2,17 +2,19 @@
 spring:
   application:
     name: notification-service
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
-
---- #DOCKER
-spring:
-  config:
-    activate:
-      on-profile: docker
+  output:
+    ansi:
+      enabled: always
+  security:
+    user:
+      name: stack
+      password: overflow
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -21,16 +23,15 @@ spring:
       maximum-pool-size: 15
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
   zipkin:
-    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
     enabled: true
     service:
       name: notification-service
@@ -42,9 +43,8 @@ spring:
       multipart:
         max-file-size: 10MB
         max-request-size: 10MB
-
   kafka:
-    bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:5092}
     consumer:
       group-id: my-group
       auto-offset-reset: earliest
@@ -64,23 +64,23 @@ spring:
         partitions: 1
         replication-factor: 1
 
-application:
-  security:
-    jwt:
-      secret-key: urfaguzelsehiristanbulda
-      expiration: 900000 #  15 min in ms
-      cookie-name: jwt-cookie
-      refresh-token:
-        expiration: 1296000000 # 15 days in ms
-        cookie-name: refresh-jwt-cookie
-server:
-  port: ${SERVER_PORT:4001}
+springdoc:
+  packagesToScan: com.oteller.example.service.notification
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_FULL_URL:http://localhost:8761/eureka/}
-    registerWithEureka: true
-    enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
+
+server:
+  port: 5001
+  forward-headers-strategy: framework

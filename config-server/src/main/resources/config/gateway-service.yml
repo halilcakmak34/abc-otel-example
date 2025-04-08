@@ -1,0 +1,141 @@
+
+spring:
+  application:
+    name: gateway-service
+  output:
+    ansi:
+      enabled: always
+  security:
+    user:
+      name: stack
+      password: overflow
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6900/otel-db}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      connection-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  zipkin:
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
+    enabled: true
+    service:
+      name: gateway-service
+    message-timeout: 10
+    sleuth:
+      sampler:
+        probability: 1.0
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+  kafka:
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:5092}
+    topics:
+      test:
+        name: test-topic
+        partitions: 1
+        replication-factor: 1
+      reservation:
+        name: reservation-topic
+        partitions: 1
+        replication-factor: 1
+      abc-logger:
+        name: abc-logger-topic
+        partitions: 1
+        replication-factor: 1
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: otel-service
+          uri: http://localhost:5002
+          predicates:
+            - Path=/api/otel-service/**
+          filters:
+            - RewritePath=/api/otel-service/(?<path>.*), /$\{path}
+        - id: notification-service
+          uri: http://localhost:5001
+          predicates:
+            - Path=/api/notification-service/**
+          filters:
+            - RewritePath=/api/notification-service/(?<path>.*), /$\{path}
+        - id: reservation-service
+          uri: http://localhost:5003
+          predicates:
+            - Path=/api/reservation-service/**
+          filters:
+            - RewritePath=/api/reservation-service/(?<path>.*), /$\{path}
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+springdoc:
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  swagger-ui:
+    use-root-path: true
+  api-docs:
+    version: openapi_3_1
+
+
+
+#springdoc:
+#  swagger-ui:
+#    urls:
+#      - name: gateway-service
+#        url: /v3/api-docs
+#      - name: otel-service
+#        url: /api/otel-service/v3/api-docs
+#      - name: notification-service
+#        url: /api/notification-service/v3/api-docs
+#      - name: reservation-service
+#        url: /api/reservation-service/v3/api-docs
+
+application:
+  security:
+    jwt:
+      secret-key: 586B633834416E396D7436753879382F423F4428482B4C6250655367566B5970
+      expiration: 900000 #  15 min in ms
+      cookie-name: jwt-cookie
+      refresh-token:
+        expiration: 1296000000 # 15 days in ms
+        cookie-name: refresh-jwt-cookie
+    user:
+      name: adm
+      password: adm
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
+
+server:
+  port: 5765
+  forward-headers-strategy: framework
+
+

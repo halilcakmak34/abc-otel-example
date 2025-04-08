@@ -1,18 +1,12 @@
 
 spring:
-  application:
-    name: otel-service
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
-
----
-spring:
-  config:
-    activate:
-      on-profile: docker
+  security:
+    user:
+      name: stack
+      password: overflow
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -32,7 +26,7 @@ spring:
     base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
-      name: otel-service
+      name: reservation-service
     message-timeout: 10
     sleuth:
       sampler:
@@ -43,6 +37,11 @@ spring:
         max-request-size: 10MB
   kafka:
     bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -59,23 +58,22 @@ spring:
         name: abc-logger-topic
         partitions: 1
         replication-factor: 1
-application:
-  security:
-    jwt:
-      secret-key: urfaguzelsehiristanbulda
-      expiration: 900000 #  15 min in ms
-      cookie-name: jwt-cookie
-      refresh-token:
-        expiration: 1296000000 # 15 days in ms
-        cookie-name: refresh-jwt-cookie
+
+springdoc:
+  packagesToScan: com.oteller.example.log
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
+
 server:
-  port: ${SERVER_PORT:4002}
+  port: ${SERVER_PORT:5004}
+
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_FULL_URL:http://localhost:8761/eureka/}
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
     registerWithEureka: true
     enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false

@@ -1,19 +1,11 @@
-
 spring:
   config:
+    import: "optional:configserver:http://config-server:8888"
     activate:
-      on-profile: local
-server:
-  port: ${SERVER_PORT:5761}
-
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: false
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-  server:
-    waitTimeInMsWhenSyncEmpty: 0
+      on-profile: docker
+---
+spring:
+  application:
+    name: discovery-server
+  config:
+    import: "optional:configserver:http://localhost:8888"

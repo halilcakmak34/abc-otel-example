@@ -1,0 +1,524 @@
+{
+	"info": {
+		"_postman_id": "795fae42-541f-4a55-8419-44dd52c3c2cf",
+		"name": "Otel-Example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "976153"
+	},
+	"item": [
+		{
+			"name": "gateway",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.globals.set('otel-access-token',jsonData.access_token);",
+											"pm.globals.set('otel-refresh-token',jsonData.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"firstname\": \"admin1\",\n    \"lastname\":\"admin1\",\n    \"email\":\"admin1@abcsepeti.com\",\n    \"password\":\"07104420!Gyte\",\n    \"role\":\"ADMIN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "user-example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"firstname\": \"user1\",\n    \"lastname\":\"user1\",\n    \"email\":\"user1@abcsepeti.com\",\n    \"password\":\"07104420!Gyte\",\n    \"role\":\"USER\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{gateway-port}}/api/auth/register",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{gateway-port}}",
+											"path": [
+												"api",
+												"auth",
+												"register"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "jwt-cookie=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBhYmNzZXBldGkuY29tIiwiaWF0IjoxNzQ0MDYzOTIyLCJleHAiOjE3NDQwNjQ4MjJ9.t__2IXX2baroqIu8B-Faf4_NWpdJfIo9d6KWfUxnDeA; Path=/; Max-Age=86400; Expires=Tue, 08 Apr 2025 22:12:02 GMT; Secure; HttpOnly; SameSite=Strict"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "refresh-jwt-cookie=MjQ5Y2VlMmMtOWY0NC00ZGVmLTljZjgtMjU2Mjk0N2ZjMjc2; Path=/; Max-Age=1296000; Expires=Tue, 22 Apr 2025 22:12:02 GMT; Secure; HttpOnly; SameSite=Strict"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 07 Apr 2025 22:12:02 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 4,\n    \"email\": \"user1@abcsepeti.com\",\n    \"roles\": [\n        \"READ_PRIVILEGE\",\n        \"WRITE_PRIVILEGE\",\n        \"ROLE_USER\"\n    ],\n    \"access_token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBhYmNzZXBldGkuY29tIiwiaWF0IjoxNzQ0MDYzOTIyLCJleHAiOjE3NDQwNjQ4MjJ9.t__2IXX2baroqIu8B-Faf4_NWpdJfIo9d6KWfUxnDeA\",\n    \"refresh_token\": \"MjQ5Y2VlMmMtOWY0NC00ZGVmLTljZjgtMjU2Mjk0N2ZjMjc2\",\n    \"token_type\": \"BEARER\"\n}"
+								}
+							]
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.globals.set('otel-access-token',jsonData.access_token);",
+											"pm.globals.set('otel-refresh-token',jsonData.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"admin1@abcsepeti.com\",\n    \"password\":\"07104420!Gyte\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "refresh-token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{otel-access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refreshToken\":\"{{otel-refresh-token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/refresh-token",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"refresh-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "refresh-token-cookie",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Content-Type is present\", function () {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 202]);",
+											"});",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"console.log(pm.response)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{otel-access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/refresh-token-cookie",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"refresh-token-cookie"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{otel-access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/logout",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "info",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{otel-access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"admin3@abcsepeti.com\",\n    \"password\":\"07104420!Gyte\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{gateway-port}}/api/auth/info",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{gateway-port}}",
+									"path": [
+										"api",
+										"auth",
+										"info"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "otel-service",
+			"item": [
+				{
+					"name": "get-otel-information",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{otel-access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}:{{gateway-port}}/api/otel-service/operation/get-otel-information",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{gateway-port}}",
+							"path": [
+								"api",
+								"otel-service",
+								"operation",
+								"get-otel-information"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{otel-access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}:{{gateway-port}}/api/otel-service/operation/test",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{gateway-port}}",
+							"path": [
+								"api",
+								"otel-service",
+								"operation",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

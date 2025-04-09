@@ -1,11 +1,13 @@
 spring:
+  application:
+    name: log-service
   config:
-    import: "optional:configserver:http://config-server:8888"
+    import: ${CONFIG_FULL_URL:optional:configserver:http://config-server:8888}
     activate:
       on-profile: docker
 ---
 spring:
   application:
-    name: notification-service
+    name: log-service
   config:
     import: "optional:configserver:http://localhost:8888"

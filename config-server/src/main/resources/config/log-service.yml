@@ -61,7 +61,7 @@ spring:
 springdoc:
   packagesToScan: com.oteller.example.log
   cache:
-    disabled: true
+    disabled: false
   version: '@springdoc.version@'
   api-docs:
     version: openapi_3_1
@@ -69,6 +69,8 @@ springdoc:
 server:
   port: ${SERVER_PORT:0}
   forward-headers-strategy: framework
+  servlet:
+    context-path: /api
 
 
 eureka:

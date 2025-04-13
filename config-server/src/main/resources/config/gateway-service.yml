@@ -89,7 +89,7 @@ spring:
 
 springdoc:
   cache:
-    disabled: true
+    disabled: false
   version: '@springdoc.version@'
   swagger-ui:
     use-root-path: true

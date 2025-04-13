@@ -53,7 +53,7 @@ spring:
 springdoc:
   packagesToScan: com.oteller.example.service.reservation
   cache:
-    disabled: true
+    disabled: false
   version: '@springdoc.version@'
   api-docs:
     version: openapi_3_1

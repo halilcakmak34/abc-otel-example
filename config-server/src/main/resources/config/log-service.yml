@@ -57,14 +57,9 @@ spring:
 
 springdoc:
   packagesToScan: com.oteller.example.log
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
-  api-docs:
-    version: openapi_3_1
 
 server:
-  port: ${SERVER_PORT:5004}
+  port: ${SERVER_PORT:5011}
 
 
 eureka:

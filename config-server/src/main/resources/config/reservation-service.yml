@@ -1,17 +1,5 @@
 
 spring:
-  application:
-    name: reservation-service
-  output:
-    ansi:
-      enabled: always
-  security:
-    user:
-      name: stack
-      password: overflow
-  main:
-    web-application-type: reactive
-    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
@@ -61,11 +49,6 @@ spring:
 
 springdoc:
   packagesToScan: com.oteller.example.service.reservation
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
-  api-docs:
-    version: openapi_3_1
 
 eureka:
   client:

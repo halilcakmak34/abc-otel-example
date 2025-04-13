@@ -49,11 +49,18 @@ spring:
 
 springdoc:
   packagesToScan: com.oteller.example.service.reservation
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
 
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+  instance:
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 logging:
   pattern:

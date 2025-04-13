@@ -5,10 +5,6 @@ spring:
   output:
     ansi:
       enabled: always
-  security:
-    user:
-      name: admin
-      password: admin
   main:
     web-application-type: reactive
     allow-bean-definition-overriding: true

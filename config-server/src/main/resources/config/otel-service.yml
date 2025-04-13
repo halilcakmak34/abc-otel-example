@@ -5,10 +5,6 @@ spring:
   output:
     ansi:
       enabled: always
-  security:
-    user:
-      name: stack
-      password: overflow
   main:
     web-application-type: reactive
     allow-bean-definition-overriding: true
@@ -66,11 +62,6 @@ spring:
 
 springdoc:
   packagesToScan: com.oteller.example.otel
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
-  api-docs:
-    version: openapi_3_1
 
 eureka:
   client:

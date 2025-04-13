@@ -1,5 +1,8 @@
 
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
@@ -57,17 +60,24 @@ spring:
 
 springdoc:
   packagesToScan: com.oteller.example.log
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
 
 server:
-  port: ${SERVER_PORT:5011}
+  port: ${SERVER_PORT:0}
+  forward-headers-strategy: framework
 
 
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
-    registerWithEureka: true
-    enabled: true #eureka discovery is enabled in this profile
+  instance:
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 
 management:
   tracing:

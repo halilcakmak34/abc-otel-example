@@ -1,5 +1,8 @@
 
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
@@ -67,7 +70,10 @@ logging:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
 
 server:
-  port: 5003
+  port: ${SERVER_PORT:0}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /api
 
 management:
   tracing:

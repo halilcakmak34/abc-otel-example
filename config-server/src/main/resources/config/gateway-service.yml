@@ -105,9 +105,6 @@ application:
       refresh-token:
         expiration: 1296000000 # 15 days in ms
         cookie-name: refresh-jwt-cookie
-    user:
-      name: admin
-      password: admin
 
 
 eureka:

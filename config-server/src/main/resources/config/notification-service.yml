@@ -1,17 +1,8 @@
 
 spring:
-  application:
-    name: notification-service
   output:
     ansi:
       enabled: always
-  security:
-    user:
-      name: stack
-      password: overflow
-  main:
-    web-application-type: reactive
-    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
@@ -76,13 +67,16 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+  instance:
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 logging:
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
 
 server:
-  port: 5001
+  port: ${SERVER_PORT:0}
+  forward-headers-strategy: framework
 
 management:
   tracing:
